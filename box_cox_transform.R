@@ -4,13 +4,13 @@ n <- 1000
 
 # Генерируем случайные ID
 set.seed(123)
-id <- sample(1:10000, n, replace = TRUE)
+id <- sample(1:10000, n, replace = T)
 
 # Генерируем ненормально распределенные значения денег
 mu <- log(10)
 sd <- 1
 money <- rlnorm(n, meanlog = mu, sdlog = sd)
-money <- money * (300/max(money))
+money <- money * (300 / max(money))
 
 df <- data.frame(id, money)
 
@@ -18,7 +18,7 @@ df <- data.frame(id, money)
 head(df)
 shapiro.test(df$money)
 
-par(mfrow=c(1, 2))
+par(mfrow = c(1, 2))
 hist(df$money)
 qqnorm(df$money)
 qqline(df$money, col = "red")
@@ -29,7 +29,7 @@ qqline(df$money, col = "red")
 library(MASS)
 
 # Вычисляем наилучшее значение λ для преобразования Бокса-Кокса
-par(mfrow=c(1, 1))
+par(mfrow = c(1, 1))
 boxcox_result <- boxcox(df$money ~ 1, lambda = seq(-3,3,0.1))
 
 # Получаем наилучшее значение λ
@@ -43,7 +43,7 @@ df$money_transformed <- car::bcPower(df$money, best_lambda)
 head(df)
 shapiro.test(df$money_transformed)
 
-par(mfrow=c(1, 2))
+par(mfrow = c(1, 2))
 hist(df$money_transformed)
 qqnorm(df$money_transformed)
 qqline(df$money_transformed, col = "red")
